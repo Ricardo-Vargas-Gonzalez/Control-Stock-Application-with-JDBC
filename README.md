@@ -22,8 +22,10 @@ Finalmente entendí el termino, se trada de usar comandos de sql en la aplicacio
 En el caso de java podemos tratar esta vulnerabilidad por medio de los prepareStatements que directamente convertiran cualquier intento de comando sql en los campos de la aplicación, en mero texto añadido a la tabla de MySql.
 El PreparedStatement mantiene la query compilada en la base de datos, de forma parametrizada. Así el usuario puede ejecutar la misma consulta diversas veces con parámetros distintos.
 
-/*
-             * El estándar de JDBC (del driver) para manejar transacciones de base de datos
-             * es el Auto-Commit que puede ser modificado por el método setAutoCommit,
-             * de la interfaz Connection
-             */
+#### Auto-commit
+
+El estándar de JDBC (del driver) para manejar transacciones de base de datos es el Auto-Commit que puede ser modificado por el método setAutoCommit, de la interfaz Connection
+
+#### Pool de conexiones
+
+el pool de conexiones es un arreglo que permite, configurar el minimo y el maximo de conexiones, al mismo tiempo, que puede tener una base de datos, lo hace por medio de los datasource, tales como C3P0.

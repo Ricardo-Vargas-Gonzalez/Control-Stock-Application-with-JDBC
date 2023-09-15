@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alura.jdbc.factory.ConnectionFactory;
+import com.alura.jdbc.modelo.Producto;
 
 public class ProductoController {
 
@@ -24,7 +25,7 @@ public class ProductoController {
                     "UPDATE PRODUCTO SET "
                             + " NOMBRE = ?"
                             + ", DESCRIPCION = ?"
-                             + ", CANTIDAD = ?"
+                            + ", CANTIDAD = ?"
                             + " WHERE ID = ?");
             try (statement) {
                 statement.setString(1, nombre);
@@ -88,11 +89,7 @@ public class ProductoController {
         }
     }
 
-    public void guardar(Map<String, String> producto) throws SQLException {
-        String nombre = producto.get("NOMBRE");
-        String descripcion = producto.get("DESCRIPCION");
-        Integer cantidad = Integer.valueOf(producto.get("CANTIDAD"));
-        Integer maximoCantidad = 50;
+    public void guardar(Producto producto) throws SQLException {
 
         ConnectionFactory factory = new ConnectionFactory();
         final Connection con = factory.recuperaConexion();
@@ -106,13 +103,7 @@ public class ProductoController {
 
             try (statement) {
 
-                do {
-                    int cantidadParaGuardar = Math.min(cantidad, maximoCantidad);
-
-                    ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);
-
-                    cantidad -= maximoCantidad;
-                } while (cantidad > 0);
+                ejecutaRegistro(producto, statement);
 
                 con.commit();
                 System.out.println("COMMIT");
@@ -123,12 +114,12 @@ public class ProductoController {
         }
     }
 
-    private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)
+    private void ejecutaRegistro(Producto producto, PreparedStatement statement)
             throws SQLException {
-        statement.setString(1, nombre);
 
-        statement.setInt(3, cantidad);
-        statement.setString(2, descripcion);
+        statement.setString(1, producto.getNombre());
+        statement.setInt(3, producto.getCantidad());
+        statement.setString(2, producto.getDescripcion());
 
         statement.execute();
 
@@ -137,9 +128,10 @@ public class ProductoController {
         try (resultSet) {
 
             while (resultSet.next()) {
+                producto.setId(resultSet.getInt(1));
                 System.out.println(
-                        String.format("Fue insertado el producto de ID %d",
-                                resultSet.getInt(1)));
+                        String.format("Fue insertado el producto de ID %s",
+                                producto));
             }
         }
     }
