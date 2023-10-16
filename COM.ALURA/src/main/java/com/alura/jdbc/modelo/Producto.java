@@ -53,5 +53,6 @@ public class Producto {
             this.nombre,
             this.descripcion,
             this.cantidad);
+            
     }
 }
